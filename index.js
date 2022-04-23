@@ -51,9 +51,24 @@ async function run() {
             res.send(service);
         });
 
-        //  POST api for geting data from client side
+        //  POST api for receiving data from client side
+        app.post('/service', async(req, res) => {
 
+            const newService = req.body;
+            const result = await serviceCollection.insertOne(newService);
+            res.send(result);
+        })
 
+        //  DELETE api to deleting data from the database
+
+        app.delete('/service/:id', async(req , res) => {
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+
+            const result = await(serviceCollection.deleteOne(query));
+
+            res.send(result);
+        });
 
     }
     finally {
