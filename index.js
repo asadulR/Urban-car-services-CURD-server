@@ -29,6 +29,7 @@ async function run() {
         await client.connect();
 
         const serviceCollection = client.db('urbanCar').collection('service');
+        const orderCollection = client.db('urbanCar').collection('order');
 
         //  get api to load data from database to client side
         app.get('/service', async (req, res) => {
@@ -69,6 +70,30 @@ async function run() {
 
             res.send(result);
         });
+
+
+
+        //   ORDER COLLECTION API 
+
+        app.post('/order', async(req, res) => {
+            const order = req.body;
+            const result = await orderCollection.insertOne(order);
+            res.send(result);
+        });
+
+        //  Get order from the database
+
+        app.get('/order', async(req, res) => {
+            const email = req.query.email;
+            // console.log(email);
+
+            const query = {userEmail: email};
+            const cursor = orderCollection.find(query);
+            const orders = await cursor.toArray();
+            res.send(orders);
+        });
+
+
 
     }
     finally {
